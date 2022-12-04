@@ -1,0 +1,26 @@
+load("@rules_python//python/pip_install:requirements.bzl", "compile_pip_requirements")
+load("@pip//:requirements.bzl", "requirement")
+load("//rules/pytest:defs.bzl", "pytest_test")
+
+exports_files([
+    "pytest.ini",
+    "requirements.txt.lock",
+])
+
+compile_pip_requirements(
+    name = "requirements",
+    extra_args = ["--allow-unsafe"],
+    requirements_in = "requirements.txt",
+    requirements_txt = "requirements.txt.lock",
+    visibility = ["__pkg__"],
+)
+
+
+pytest_test(
+    name = "test",
+    srcs = ["test.py"],
+    deps = [
+        requirement("aws-cdk-lib"),
+    ],
+)
+

@@ -1,0 +1,9 @@
+common --color=yes
+
+build --verbose_failures
+
+# Configure tests - increase timeout, print errors and timeout warnings
+test --verbose_failures
+test --test_output=all
+test --test_summary=detailed
+test --test_verbose_timeout_warnings
