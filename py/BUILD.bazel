@@ -1,5 +1,4 @@
 load("@rules_python//python/pip_install:requirements.bzl", "compile_pip_requirements")
-load("@pip//:requirements.bzl", "requirement")
 load("//rules/pytest:defs.bzl", "pytest_test")
 
 exports_files([
@@ -20,7 +19,7 @@ pytest_test(
     name = "test",
     srcs = ["test.py"],
     deps = [
-        requirement("aws-cdk-lib"),
+        "@pip_aws_cdk_lib//:wheel",
     ],
 )
 

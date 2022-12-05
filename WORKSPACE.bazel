@@ -24,15 +24,41 @@ python_register_toolchains(
 )
 
 load("@python//:defs.bzl", py_interpreter = "interpreter")
-load("@rules_python//python:pip.bzl", "pip_parse")
-load("@rules_python//python/pip_install:requirements.bzl", "compile_pip_requirements")
+load("@rules_python//python:pip.bzl", "package_annotation", "pip_parse")
+
+PY_WHEEL_RULE_CONTENT = """\
+load("@aspect_rules_py//py:defs.bzl", "py_wheel")
+py_wheel(
+    name = "wheel",
+    src = ":whl",
+)
+"""
+
+PACKAGES = ["aws-cdk-lib", "aws-cdk-aws-batch-alpha"]
+ANNOTATIONS = {
+    pkg: package_annotation(additive_build_content = PY_WHEEL_RULE_CONTENT)
+    for pkg in PACKAGES
+}
 
 pip_parse(
     name = "pip",
     requirements_lock = "//py:requirements.txt.lock",
     python_interpreter_target = py_interpreter,
+    enable_implicit_namespace_pkgs = True,
+    annotations= ANNOTATIONS,
 )
 
 load("@pip//:requirements.bzl", lazy_pip_install = "install_deps")
 
 lazy_pip_install()
+
+http_archive(
+    name = "aspect_rules_py",
+    sha256 = "0cfd8d2492a1a63c3881abd759a54c4bb8a3555cb85971fb8de5cc8315546c42",
+    strip_prefix = "rules_py-846674298d84663dcc109b6b20f5f8fc39aacfd4",
+    url = "https://github.com/aspect-build/rules_py/archive/846674298d84663dcc109b6b20f5f8fc39aacfd4.tar.gz"
+)
+
+load("@aspect_rules_py//py:repositories.bzl", "rules_py_dependencies")
+
+rules_py_dependencies()
