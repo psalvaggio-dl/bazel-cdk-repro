@@ -21,5 +21,6 @@ def pytest_test(name, srcs, deps = [], args = [], data = [], **kwargs):
         data = [
             "//py:pytest.ini",
         ] + data,
+        legacy_create_init = False,
         **kwargs
     )
