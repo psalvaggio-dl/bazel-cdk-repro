@@ -44,7 +44,6 @@ pip_parse(
     name = "pip",
     requirements_lock = "//py:requirements.txt.lock",
     python_interpreter_target = py_interpreter,
-    enable_implicit_namespace_pkgs = True,
     annotations= ANNOTATIONS,
 )
 
